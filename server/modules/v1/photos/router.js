@@ -14,7 +14,7 @@ const Photos = require('./controller');
 
 router.get('/user', requireAuth, Photos.user);
 router.get('/', Photos.all);
-router.get('/:id', requireAuth, Photos.one);
+router.get('/:id', Photos.one);
 router.post('/', requireAuth, upload, Photos.create);
 router.patch('/:id', requireAuth, Photos.patch);
 router.get('/trash/user', requireAuth, Photos.userTrash);
