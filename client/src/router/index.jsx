@@ -4,7 +4,7 @@ import RouteAuthorized from './matchauth';
 
 import About from './../components/about';
 import Home from './../components/home';
-import Photos from './../modules/photos/components';
+import Photos from './../modules/photos';
 // import Search from './../components/search/search-wizard';
 import Signin from './../components/auth/signin';
 import Signup from './../components/auth/signup';

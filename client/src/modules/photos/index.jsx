@@ -7,12 +7,12 @@ import { Field, reduxForm } from 'redux-form';
 import { Button, ButtonGroup, Form, FormGroup } from 'react-bootstrap';
 
 // eslint-disable-next-line
-import * as actions from '../../../actions';
+import * as actions from '../../actions';
 
-import Alert from './alert';
-import DisplayPhotoSml from './display-photo-sml';
-import InputDropzone from './input-dropzone';
-import Input from './input';
+import Alert from './components/alert';
+import DisplayPhotoSml from './components/display-photo-sml';
+import InputDropzone from './components/input-dropzone';
+import Input from './components/input';
 // import validate from './validate';
 // import asyncValidate from './async-validate';
 
