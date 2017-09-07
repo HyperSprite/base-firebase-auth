@@ -47,7 +47,7 @@ describe('Photos Model', () => {
 
   it('Update a record', (done) => {
     assertName(
-      Photos.findOneAndUpdate({ photoTitle: 'Photo Title' }, { photoTitle: 'Image 1' }),
+      Photos.findOneAndUpdate({ photoTitle: photo.photoTitle }, { photoTitle: 'Image 1' }),
       'Image 1',
       done
     );

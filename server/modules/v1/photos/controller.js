@@ -64,10 +64,11 @@ exports.one = async (req, res) => {
 };
 
 // Moves a photo fron temp to public
+// callback setup for async/await
 const photoMV = (from, too) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     mv(from, too, { mkdirp: true }, (err) => {
-      if (err) resolve(err);
+      if (err) reject(err);
       resolve('success');
     });
   });

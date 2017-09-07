@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const config = require('./config').config;
 
-console.log('test-helper loaded');
+console.log(config.mongoconnect.test);
 
 before((done) => {
-  global.env = config;
-  mongoose.connect(global.env.mongoconnect.test, {
+  mongoose.connect(config.mongoconnect.test, {
     useMongoClient: true,
   });
   mongoose.connection
@@ -22,7 +21,8 @@ before((done) => {
 
 // beforeEach is a hook
 beforeEach((done) => {
-  mongoose.connection.collections.photos.drop(() => {
-    done();
-  });
+  Promise.all([
+    mongoose.connection.collections.photos.drop(() => null),
+    mongoose.connection.collections.users.drop(() => null),
+  ]).then(() => done());
 });
