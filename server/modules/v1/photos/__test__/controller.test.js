@@ -113,11 +113,9 @@ describe('Photos Controller', () => {
   // router.get('/:id', requireAuth, Photos.one);
   it('Controller: one photo by id', (done) => {
     const request = new Request({
-      // body: {
-        params: {
-          id: photo1._id,
-        },
-      // },
+      params: {
+        id: photo1._id,
+      },
     });
     const response = new Response({
       request: request,

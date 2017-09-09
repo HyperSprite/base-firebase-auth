@@ -86,9 +86,7 @@ let Signin = class Signin extends Component {
           <Button type="submit" bsStyle="primary" disabled={pristine || submitting}>Submit</Button>
           <Button type="button" bsStyle="info" disabled={pristine || submitting} onClick={reset}>Clear Values</Button>
         </ButtonGroup>
-        {this.props.modal ? (
-          null
-        ) : (
+        {!this.props.modal && (
           <span>
             {' or '}
             <Link to="/signup">

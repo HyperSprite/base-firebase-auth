@@ -134,7 +134,7 @@ let Photos = class Photos extends Component {
               >
                 Submit
               </Button>
-              {(auxButtonLabel) ? (
+              {auxButtonLabel && (
                 <Button
                   type="button"
                   bsStyle="info"
@@ -143,7 +143,7 @@ let Photos = class Photos extends Component {
                 >
                   {auxButtonLabel}
                 </Button>
-                ) : null}
+                )}
             </ButtonGroup>
           </Form>
         </div>

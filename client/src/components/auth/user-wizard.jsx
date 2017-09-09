@@ -76,10 +76,10 @@ let UserWizard = class UserWizard extends Component {
 
   renderAlert() {
     const { errorMessage } = this.props;
-    return (errorMessage) ? (
-      Object.keys(errorMessage).map(key => errorMessage[key]).map(eM => Alert(eM.path, 'Opps', eM.message))
-    ) : (
-      null
+    return errorMessage && (
+      Object.keys(errorMessage)
+        .map(key => errorMessage[key])
+        .map(eM => Alert(eM.path, 'Opps', eM.message))
     );
   }
 
