@@ -8,8 +8,8 @@ const validate = (formProps) => {
   }
   if (!formProps.password) {
     errors.password = 'Required';
-  } else if (formProps.password.length < 3) {
-    errors.password = 'Must be longer than 3 charaters';
+  } else if (formProps.password.length < 9) {
+    errors.password = 'Must be longer than 8 charaters';
   } else if (formProps.password !== formProps.passwordConfirm) {
     errors.passwordConfirm = 'Passwords must match';
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -21,13 +22,17 @@ const propTypes = {
 
 
 let Signup = class Signup extends Component {
+  constructor(props) {
+    super(props);
+    // this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
+  }
+
   handleFormSubmit(formProps) {
-    this.props.signupUser(formProps);
-    this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
+    this.props.firebase.createUser(formProps);
   }
 
   componentDidUpdate() {
-    if (this.props.modal && this.props.authenticated ) {
+    if (this.props.modal && !this.props.firebase.auth.isEmpty ) {
       this.handleSubmitSuccess();
     }
   }
@@ -41,7 +46,7 @@ let Signup = class Signup extends Component {
   }
 
   handleSubmitSuccess() {
-    if (this.props.authenticated) {
+    if (!this.props.firebase.auth.isEmpty) {
       this.props.onRequestHide();
     }
   }
@@ -97,9 +102,13 @@ let Signup = class Signup extends Component {
 Signup.propTypes = propTypes;
 
 function mapStateToProps(state) {
+  const isAuthed = ({ isEmpty, isAnonymous, uid }) => !!(
+    !isEmpty && !isAnonymous && uid
+  );
+
   return {
-    authenticated: state.auth.authenticated,
-    errorMessage: state.auth.error,
+    authenticated: isAuthed(state.firebase.auth),
+    errorMessage: state.firebase.authError.message,
   };
 }
 
@@ -107,6 +116,10 @@ Signup = reduxForm({
   form: 'signup',
   validate,
 })(Signup);
-
-
-export default connect(mapStateToProps, actions)(Signup);
+// const FBConnect = firebaseConnect((props, firebase) => {
+//   console.log(props); // -> {} if you don't pass any props
+//   const uid = firebase._.authUid || 'demo';
+//   return [`/resouces/${uid}/resouceId`]; // I want the current user's uid available here
+// })(Signup);
+const FBConnect = firebaseConnect()(Signup);
+export default connect(mapStateToProps, actions)(FBConnect);

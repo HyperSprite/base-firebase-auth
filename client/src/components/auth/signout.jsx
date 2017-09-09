@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
@@ -9,7 +10,7 @@ const propTypes = {
 
 class Signout extends Component {
   componentWillMount() {
-    this.props.signoutUser();
+    this.props.firebase.logout();
   }
 
   render() {
@@ -20,5 +21,5 @@ class Signout extends Component {
 }
 
 Signout.propTypes = propTypes;
-
-export default connect(null, actions)(Signout);
+const FBConnect = firebaseConnect()(Signout);
+export default connect(null, actions)(FBConnect);

@@ -146,9 +146,13 @@ let UserEdit = class UserEdit extends Component {
 
 function mapStateToProps(state) {
   const initialValues = state.auth.user;
+  const isAuthed = ({ isEmpty, isAnonymous, uid }) => !!(
+    !isEmpty && !isAnonymous && uid
+  );
+
   return {
-    authenticated: true,
-    message: state.auth.message,
+    authenticated: isAuthed(state.firebase.auth),
+    errorMessage: state.firebase.authError.message,
     transitionPage: state.page.transitionPage,
     initialValues,
     eventSelector: selector(state, ...formValues.map(fV => fV.contentName)),

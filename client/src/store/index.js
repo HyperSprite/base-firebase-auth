@@ -1,4 +1,6 @@
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { reactReduxFirebase } from 'react-redux-firebase';
+import * as firebase from 'firebase';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
@@ -7,9 +9,16 @@ import { createLogger } from 'redux-logger';
 import { loadState, saveState } from './localstorage';
 import { TYPES } from '../actions';
 import reducers from '../reducers';
+import firebaseConfig from './config.firebase';
 
 const persitedState = loadState();
 const token = localStorage.getItem('token');
+
+firebase.initializeApp(firebaseConfig);
+
+const firebaseLocalConfig = {
+  userProfile: 'users', // firebase root where user profiles are stored
+};
 
 const prodMiddleware = [
   promise(),
@@ -33,11 +42,18 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-const store = createStore(reducers, persitedState, middlewareOptions);
+const store = createStore(
+  reducers,
+  persitedState,
+  compose(
+    reactReduxFirebase(firebase, firebaseLocalConfig),
+    middlewareOptions
+    )
+  );
 
 store.subscribe(() => {
   saveState({
-    todos: store.getState().todos,
+    photos: store.getState().photos,
   });
 });
 

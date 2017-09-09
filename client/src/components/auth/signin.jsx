@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Redirect, Link } from 'react-router-dom';
@@ -33,7 +34,7 @@ let Signin = class Signin extends Component {
   }
 
   handleFormSubmit(formProps) {
-    this.props.signinUser(formProps);
+    this.props.firebase.login(formProps);
   }
 
   renderAlert() {
@@ -102,9 +103,13 @@ let Signin = class Signin extends Component {
 Signin.propTypes = propTypes;
 
 function mapStateToProps(state) {
+  const isAuthed = ({ isEmpty, isAnonymous, uid }) => !!(
+    !isEmpty && !isAnonymous && uid
+  );
+
   return {
-    authenticated: state.auth.authenticated,
-    errorMessage: state.auth.error,
+    authenticated: isAuthed(state.firebase.auth),
+    errorMessage: state.firebase.authError.message,
   };
 }
 
@@ -113,4 +118,5 @@ Signin = reduxForm({
   validate,
 })(Signin);
 
-export default Signin = connect(mapStateToProps, { signinUser, ifToken })(Signin);
+const FBConnect = firebaseConnect()(Signin);
+export default Signin = connect(mapStateToProps, { signinUser, ifToken })(FBConnect);

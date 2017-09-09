@@ -35,6 +35,15 @@ class Header extends Component {
     }
   }
 
+  isAuthenticatd() {
+    return () => {
+      !this.props.firebase.auth.isEmpty &&
+      !this.props.firebase.auth.isAnonymous &&
+      this.props.firebase.auth.uid
+    }
+  }
+
+
   renderLinks() {
     return this.props.authenticated ? (
       [
@@ -121,7 +130,11 @@ class Header extends Component {
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.auth.authenticated
+    authenticated: !!(
+      !state.firebase.auth.isEmpty &&
+      !state.firebase.auth.isAnonymous &&
+      state.firebase.auth.uid
+    ),
   };
 }
 
