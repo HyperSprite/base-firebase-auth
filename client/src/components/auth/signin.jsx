@@ -119,4 +119,4 @@ Signin = reduxForm({
 })(Signin);
 
 const FBConnect = firebaseConnect()(Signin);
-export default Signin = connect(mapStateToProps, { signinUser, ifToken })(FBConnect);
+export default connect(mapStateToProps, { signinUser, ifToken })(FBConnect);

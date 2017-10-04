@@ -1,4 +1,5 @@
 # Config file
 config.js
+config-firebase.json
 
 public/images/*

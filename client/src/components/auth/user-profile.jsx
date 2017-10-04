@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { formValueSelector, reduxForm, reset } from 'redux-form';
 import { Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -25,8 +26,7 @@ const propTypes = {
   authenticated: PropTypes.bool.isRequired,
   eventSelector: PropTypes.object.isRequired,
   errorMessage: PropTypes.object,
-  fetchData: PropTypes.func.isRequired,
-  fetchMessage: PropTypes.func.isRequired,
+  firebase: PropTypes.any,
   form: PropTypes.string,
   handleSubmit: PropTypes.func,
   pageTransitionFalse: PropTypes.func.isRequired,
@@ -48,29 +48,22 @@ let UserEdit = class UserEdit extends Component {
     this.cancelFormEdit = this.cancelFormEdit.bind(this);
   }
 
-  componentDidMount() {
-    this.props.fetchMessage();
-    this.props.fetchData('auth/user');
-  }
-
   componentWillUnmount() {
     this.props.pageTransitionFalse();
   }
 
   handleFormSubmit(formProps) {
-    this.props.postForm(formProps, `${relURL}`, 'USER_AUTH_EDIT');
+    this.props.firebase.updateProfile(formProps);
     this.setState({ page: null });
   }
 
   cancelFormEdit() {
-    this.props.fetchData('auth/user');
     this.props.dispatch(reset('userdata'));
     this.setState({ page: null });
   }
 
 
   setPage(pageNumber) {
-    // console.log('setPage', pageNumber);
     this.setState({ page: pageNumber });
   }
 
@@ -145,7 +138,7 @@ let UserEdit = class UserEdit extends Component {
 };
 
 function mapStateToProps(state) {
-  const initialValues = state.auth.user;
+  const initialValues = state.firebase.profile;
   const isAuthed = ({ isEmpty, isAnonymous, uid }) => !!(
     !isEmpty && !isAnonymous && uid
   );
@@ -167,4 +160,5 @@ UserEdit = reduxForm({
 UserEdit.propTypes = propTypes;
 UserEdit.defaultProps = defaultProps;
 
-export default connect(mapStateToProps, actions)(UserEdit);
+const FBConnect = firebaseConnect()(UserEdit);
+export default connect(mapStateToProps, actions)(FBConnect);

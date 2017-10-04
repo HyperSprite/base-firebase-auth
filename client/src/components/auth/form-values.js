@@ -1,12 +1,12 @@
 const formValues = [
-  {
-    contentName: 'userName',
-    contentLabel: 'User Name (Public)',
-    contentType: 'text',
-    contentAlt: '',
-    contentOptions: null,
-    componentType: 'Input',
-  },
+  // {
+  //   contentName: 'userName',
+  //   contentLabel: 'User Name (Public)',
+  //   contentType: 'text',
+  //   contentAlt: '',
+  //   contentOptions: null,
+  //   componentType: 'Input',
+  // },
   {
     contentName: 'firstname',
     contentLabel: 'First Name',

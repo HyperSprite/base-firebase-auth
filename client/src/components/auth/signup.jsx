@@ -32,7 +32,7 @@ let Signup = class Signup extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.modal && !this.props.firebase.auth.isEmpty ) {
+    if (this.props.modal && this.props.authenticated ) {
       this.handleSubmitSuccess();
     }
   }
@@ -108,7 +108,7 @@ function mapStateToProps(state) {
 
   return {
     authenticated: isAuthed(state.firebase.auth),
-    errorMessage: state.firebase.authError.message,
+    errorMessage: state.firebase.authError && state.firebase.authError.message,
   };
 }
 
@@ -116,10 +116,6 @@ Signup = reduxForm({
   form: 'signup',
   validate,
 })(Signup);
-// const FBConnect = firebaseConnect((props, firebase) => {
-//   console.log(props); // -> {} if you don't pass any props
-//   const uid = firebase._.authUid || 'demo';
-//   return [`/resouces/${uid}/resouceId`]; // I want the current user's uid available here
-// })(Signup);
+
 const FBConnect = firebaseConnect()(Signup);
 export default connect(mapStateToProps, actions)(FBConnect);

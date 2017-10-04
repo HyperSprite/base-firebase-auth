@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { push } from 'react-router-redux';
 import { formValueSelector, reduxForm } from 'redux-form';
 import { animateScroll } from 'react-scroll';
 // eslint-disable-next-line
@@ -46,11 +48,12 @@ let UserWizard = class UserWizard extends Component {
     this.cancelFormEdit = this.cancelFormEdit.bind(this);
     this.state = {
       page: 1,
+      success: false,
     };
   }
 
   componentDidMount() {
-    this.props.fetchData('auth/user');
+    // this.props.fetchData('auth/user');
   }
 
   componentWillUnmount() {
@@ -58,7 +61,15 @@ let UserWizard = class UserWizard extends Component {
   }
 
   handleFormSubmit(formProps) {
-    this.props.postForm(formProps, `${relURL}`, 'USER_AUTH_EDIT');
+    this.props.firebase.updateProfile(formProps)
+      .then(() => {
+        this.handleSubmitSuccess();
+      })
+      .catch(err => console.log('Error', err));
+  }
+
+  handleSubmitSuccess() {
+    this.setState({ success: true });
   }
 
   cancelFormEdit() {
@@ -92,9 +103,10 @@ let UserWizard = class UserWizard extends Component {
 
     const {
       page,
+      success,
     } = this.state;
 
-    if (transitionPage) {
+    if (success) {
       return (
         <Redirect to="/user-profile" />
       );
@@ -151,9 +163,14 @@ let UserWizard = class UserWizard extends Component {
 };
 
 function mapStateToProps(state) {
-  const initialValues = state.auth.user;
+  const initialValues = state.firebase.profile;
+  const isAuthed = ({ isEmpty, isAnonymous, uid }) => !!(
+    !isEmpty && !isAnonymous && uid
+  );
+
   return {
-    message: state.auth.message,
+    authenticated: isAuthed(state.firebase.auth),
+    errorMessage: state.firebase.authError.message,
     transitionPage: state.page.transitionPage,
     // to add/change items, use the formValues.js file
     initialValues,
@@ -169,4 +186,5 @@ UserWizard = reduxForm({
 UserWizard.propTypes = propTypes;
 UserWizard.defaultProps = defaultProps;
 
-export default connect(mapStateToProps, actions)(UserWizard);
+const FBConnect = firebaseConnect()(UserWizard);
+export default connect(mapStateToProps, actions)(FBConnect);
